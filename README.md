@@ -1,11 +1,11 @@
 
 # GeoPal
 
-An Android app for all the forgetful and scatterbrained people - Create reminders, which notify you, up on reaching a certain location or connecting with a certain Wi-Fi network!
+An Android app for all the forgetful and scatterbrained people - Create reminders, which notify you, up on reaching a certain location or connecting to a specific Wi-Fi network!
 
+##
 
 ![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
-
 
 ## Features
 
@@ -23,9 +23,10 @@ Navigate to this URL on your phone and download the APK
 ```bash
   https://github.com/Z-100/GeoPal/_TODO-Release.apk
 ```
-Then open the downlaoded file and install it
+..then open the downloaded file and install it
 
 **In the near future** this app will also be available in the Google Play Store
+
 ## Run Locally (Android Studio)
 
 Clone the project
@@ -46,18 +47,15 @@ Start the app on any device
   Hit the run button :D
 ```
 
-
 ## Tech Stack
 
 **Languages:** Kotlin, xml, Markdown
 
 **Libraries:** Volley, Gson
 
-
 ## Authors
 
 - Basically the whole app: [@Z-100](https://www.github.com/z-100)
-
 
 ## Appendix
 
