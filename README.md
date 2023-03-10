@@ -21,7 +21,7 @@ An Android app for all the forgetful and scatterbrained people - Create reminder
 
 Navigate to this URL on your phone and download the APK
 ```bash
-  https://github.com/Z-100/GeoPal/_TODO-Release.apk
+  https://github.com/Z-100/GeoPal/TODO-Release.apk
 ```
 ..then open the downloaded file and install it
 
