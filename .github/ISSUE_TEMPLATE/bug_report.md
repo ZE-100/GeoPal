@@ -1,38 +1,32 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+title: bug/your_bug
+labels: bug
+assignees: Z-100
 
 ---
 
-**Describe the bug**
+:notebook_with_decorative_cover: **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+:walking: **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+ :rainbow: **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+:camera: **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ :iphone: **Smartphone (please complete the following information):**
+ - Device: [e.g. Samsung Galaxy S20]
+ - OS: [e.g. Android 13]
+ - Version [e.g. 1]
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
+:bomb: **Additional context**
 Add any other context about the problem here.
