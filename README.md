@@ -44,7 +44,7 @@ Install dependencies and sync project
 Start the app on any device
 
 ```bash
-  Hit the run button :D
+  Hit the run button :)
 ```
 
 ## Tech Stack
