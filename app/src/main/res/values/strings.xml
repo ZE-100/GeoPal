@@ -15,4 +15,6 @@
     <string name="create_reminder_loc_image_desc">Description icon</string>
     <string name="create_reminder_btn_cancel">Cancel</string>
     <string name="create_reminder_btn_save">Save</string>
+    <string name="reminder_location_hint">Location loading...</string>
+    <string name="reminder_title_hint">Title loading...</string>
 </resources>
