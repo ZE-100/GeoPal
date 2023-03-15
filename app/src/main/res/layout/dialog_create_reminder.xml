@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dialog_create_reminder_bg">
+
+    <TextView android:id="@+id/tv_create_reminder_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/create_reminder_title"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    <LinearLayout style="@style/dialog_element">
+
+        <ImageView style="@style/text_icon"
+                android:src="@drawable/create_reminder_description_icon"
+                android:contentDescription="@string/create_reminder_desc_image_desc" />
+
+        <EditText android:id="@+id/et_reminder_description"
+                style="@style/edit_text_text"
+                android:hint="@string/create_reminder_description_hint" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_element">
+
+        <ImageView style="@style/text_icon"
+                android:src="@drawable/create_reminder_location_icon"
+                android:contentDescription="@string/create_reminder_loc_image_desc" />
+
+        <EditText android:id="@+id/et_reminder_location"
+                style="@style/edit_text_text"
+                android:hint="@string/create_reminder_location_hint" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_element">
+
+            <Button android:id="@+id/btn_reminder_cancel"
+                    android:text="@string/create_reminder_btn_cancel"
+                    style="@style/button_cancel" />
+
+            <Button android:id="@+id/btn_reminder_save"
+                    android:text="@string/create_reminder_btn_save"
+                    style="@style/button_save" />
+    </LinearLayout>
+</LinearLayout>
