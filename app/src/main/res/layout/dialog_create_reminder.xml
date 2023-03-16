@@ -35,6 +35,7 @@
         <EditText android:id="@+id/et_reminder_location"
                 style="@style/edit_text_text"
                 android:hint="@string/create_reminder_location_hint" />
+
     </LinearLayout>
 
     <LinearLayout style="@style/dialog_element">
@@ -58,4 +59,14 @@
                 style="@style/edit_text_text"
                 android:hint="@string/create_reminder_location_hint" />
     </LinearLayout>
+
+    <TextView android:id="@+id/tv_reminder_location_lat"
+            style="@style/edit_text_text"
+            android:visibility="invisible"
+            android:hint="@string/create_reminder_location_hint" />
+
+    <TextView android:id="@+id/tv_reminder_location_lon"
+            style="@style/edit_text_text"
+            android:visibility="invisible"
+            android:hint="@string/create_reminder_location_hint" />
 </LinearLayout>

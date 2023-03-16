@@ -1,5 +1,6 @@
 package com.z100.geopal.database.helper
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -31,6 +32,12 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         db.execSQL(SQL_CREATE_NETWORK_TABLE)
     }
 
+    fun deleteAll() {
+        writableDatabase.delete(ReminderContract.ReminderEntry.TABLE_NAME, null, null)
+        writableDatabase.delete(LocationContract.LocationEntry.TABLE_NAME, null, null)
+        writableDatabase.delete(NetworkContract.NetworkEntry.TABLE_NAME, null, null)
+    }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
@@ -42,6 +49,36 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
+    }
+
+    fun insertReminder(reminder: Reminder) {
+        var locationId: Long? = null
+        if (reminder.location != null) {
+            val locationValues = ContentValues().apply {
+                put(LocationContract.LocationEntry.COLUMN_NAME, reminder.location.name)
+                put(LocationContract.LocationEntry.COLUMN_LAT, reminder.location.lat)
+                put(LocationContract.LocationEntry.COLUMN_LON, reminder.location.lon)
+            }
+            locationId = writableDatabase.insertOrThrow(LocationContract.LocationEntry.TABLE_NAME, null, locationValues)
+        }
+
+        var networkId: Long? = null
+        if (reminder.network != null) {
+            val networkValues = ContentValues().apply {
+                put(NetworkContract.NetworkEntry.COLUMN_NAME, reminder.network.name)
+                put(NetworkContract.NetworkEntry.COLUMN_SSID, reminder.network.ssid)
+            }
+            networkId = writableDatabase.insertOrThrow(NetworkContract.NetworkEntry.TABLE_NAME, null, networkValues)
+        }
+
+        val reminderValues = ContentValues().apply {
+            put(ReminderContract.ReminderEntry.COLUMN_TITLE, reminder.title)
+            put(ReminderContract.ReminderEntry.COLUMN_DESCRIPTION, reminder.description)
+            put(ReminderContract.ReminderEntry.COLUMN_LOCATION, locationId)
+            put(ReminderContract.ReminderEntry.COLUMN_NETWORK, networkId)
+        }
+
+        writableDatabase.insertOrThrow("reminder", null, reminderValues)
     }
 
     fun findAllReminders(): List<Reminder> {
