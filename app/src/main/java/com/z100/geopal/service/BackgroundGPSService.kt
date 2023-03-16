@@ -9,7 +9,6 @@ import android.location.Location
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
-import android.util.Log.DEBUG
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import com.google.android.gms.location.*
