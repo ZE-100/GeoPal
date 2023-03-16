@@ -1,4 +1,4 @@
-package com.z100.geopal.entity
+package com.z100.geopal.pojo
 
 import com.z100.geopal.R
 

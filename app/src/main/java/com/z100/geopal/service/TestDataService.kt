@@ -2,55 +2,21 @@ package com.z100.geopal.service
 
 import android.content.ContentValues
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.z100.geopal.R
-import com.z100.geopal.database.entity.LocationContract
-import com.z100.geopal.database.entity.NetworkContract
-import com.z100.geopal.database.entity.ReminderContract
+import com.z100.geopal.database.contracts.LocationContract
+import com.z100.geopal.database.contracts.NetworkContract
+import com.z100.geopal.database.contracts.ReminderContract
 import com.z100.geopal.database.helper.ReminderDBHelper
-import com.z100.geopal.entity.Location
-import com.z100.geopal.entity.Network
-import com.z100.geopal.entity.Reminder
+import com.z100.geopal.pojo.Location
+import com.z100.geopal.pojo.Network
+import com.z100.geopal.pojo.Reminder
 
-class TestDataService(context: Context) {
+class TestDataService(private val context: Context) {
 
     private val dbHelper = ReminderDBHelper(context)
 
     fun addTestRemindersToDB() {
-        val db = dbHelper.writableDatabase
-
         provideRemindersList().forEach {
-
-            var locationId: Long? = null
-            if (it.location != null) {
-                val locationValues = ContentValues().apply {
-                    put(LocationContract.LocationEntry.COLUMN_NAME, it.location.name)
-                    put(LocationContract.LocationEntry.COLUMN_LAT, it.location.lat)
-                    put(LocationContract.LocationEntry.COLUMN_LON, it.location.lon)
-                }
-
-                locationId = db.insertOrThrow(LocationContract.LocationEntry.TABLE_NAME, null, locationValues)
-            }
-
-            var networkId: Long? = null
-            if (it.network != null) {
-                val networkValues = ContentValues().apply {
-                    put(NetworkContract.NetworkEntry.COLUMN_NAME, it.network.name)
-                    put(NetworkContract.NetworkEntry.COLUMN_SSID, it.network.ssid)
-                }
-
-                networkId = db.insertOrThrow(NetworkContract.NetworkEntry.TABLE_NAME, null, networkValues)
-            }
-
-            val reminderValues = ContentValues().apply {
-                put(ReminderContract.ReminderEntry.COLUMN_TITLE, it.title)
-                put(ReminderContract.ReminderEntry.COLUMN_DESCRIPTION, it.description)
-                put(ReminderContract.ReminderEntry.COLUMN_LOCATION, locationId)
-                put(ReminderContract.ReminderEntry.COLUMN_NETWORK, networkId)
-            }
-
-            db.insertOrThrow("reminder", null, reminderValues)
+            ReminderDBHelper(context).insertReminder(it)
         }
 //        db.close() //Thierry was here TODO: Add back in
     }

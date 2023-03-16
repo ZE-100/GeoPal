@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.z100.geopal.MainActivity
+import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.FragmentSettingsBinding
 import com.z100.geopal.service.TestDataService
 
@@ -42,6 +43,10 @@ class SettingsFragment : Fragment() {
                 _, isChecked -> MainActivity.spDataService.switchTestMode()
             if (isChecked) testDataService.addTestRemindersToDB()
             else testDataService.removeTestRemindersFromDB()
+        }
+
+        binding.btnDeleteAll.setOnClickListener {
+            ReminderDBHelper(requireContext()).deleteAll()
         }
     }
 }

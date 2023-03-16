@@ -8,6 +8,8 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
 import com.z100.geopal.databinding.ActivityMainBinding
 import com.z100.geopal.service.SPDataService
 import com.z100.geopal.ui.fragments.DashboardFragment
@@ -21,10 +23,12 @@ class MainActivity : AppCompatActivity() {
 
     companion object Factory {
         lateinit var spDataService: SPDataService
+        lateinit var requestQueue: RequestQueue
     }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         spDataService = SPDataService(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        requestQueue = Volley.newRequestQueue(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
