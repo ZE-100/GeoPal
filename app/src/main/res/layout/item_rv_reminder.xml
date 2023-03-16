@@ -6,6 +6,7 @@
 
 
     <ImageView style="@style/text_icon"
+            android:id="@+id/iv_reminder_icon"
             android:layout_weight="1"
             android:src="@drawable/reminder_type_wifi_icon"
             android:contentDescription="@string/create_reminder_loc_image_desc" />
