@@ -1,4 +1,4 @@
-package com.z100.geopal.database.entity
+package com.z100.geopal.database.contracts
 
 import android.provider.BaseColumns
 

@@ -2,9 +2,9 @@ package com.z100.geopal.service
 
 import android.content.ContentValues
 import android.content.Context
-import com.z100.geopal.database.entity.LocationContract
-import com.z100.geopal.database.entity.NetworkContract
-import com.z100.geopal.database.entity.ReminderContract
+import com.z100.geopal.database.contracts.LocationContract
+import com.z100.geopal.database.contracts.NetworkContract
+import com.z100.geopal.database.contracts.ReminderContract
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.pojo.Location
 import com.z100.geopal.pojo.Network
