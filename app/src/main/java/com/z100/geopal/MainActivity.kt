@@ -1,9 +1,7 @@
 package com.z100.geopal
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -14,41 +12,27 @@ import androidx.navigation.ui.navigateUp
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.z100.geopal.databinding.ActivityMainBinding
+import com.z100.geopal.service.BackgroundGPSService
 import com.z100.geopal.service.SPDataService
 import com.z100.geopal.ui.fragments.DashboardFragment
 import com.z100.geopal.ui.fragments.SettingsFragment
-import com.z100.geopal.util.Globals.Factory.NOTIFICATION_CHANNEL_ID
-import com.z100.geopal.util.Globals.Factory.NOTIFICATION_CHANNEL_NAME
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-
-
-
     companion object Factory {
         lateinit var spDataService: SPDataService
         lateinit var requestQueue: RequestQueue
-        lateinit var notificationManager: NotificationManager
-
-//        private fun sendNotification() {
-//            val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-//                .setSmallIcon(android.R.drawable.ic_media_play)
-//                .setContentTitle("Snow")
-//                .setContentText("It's snowing!")
-//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//            notificationManager.notify(0, builder.build())
-//        }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        super.onCreate(savedInstanceState)
 
         spDataService = SPDataService(getSharedPreferences("preferences", Context.MODE_PRIVATE))
         requestQueue = Volley.newRequestQueue(this)
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,13 +41,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         setupMenuButtons()
-        setupNotificationManager()
-    }
-
-    private fun setupNotificationManager() {
-        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(
-            NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, IMPORTANCE_DEFAULT))
+        startService(Intent(this, BackgroundGPSService::class.java))
     }
 
     override fun onSupportNavigateUp(): Boolean {
