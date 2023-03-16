@@ -14,9 +14,9 @@ import com.z100.geopal.database.entity.NetworkContract
 import com.z100.geopal.database.entity.NetworkContract.SQL_CREATE_NETWORK_TABLE
 import com.z100.geopal.database.entity.NetworkContract.SQL_DELETE_NETWORK_TABLE
 import com.z100.geopal.database.entity.ReminderContract
-import com.z100.geopal.entity.Location
-import com.z100.geopal.entity.Network
-import com.z100.geopal.entity.Reminder
+import com.z100.geopal.pojo.Location
+import com.z100.geopal.pojo.Network
+import com.z100.geopal.pojo.Reminder
 
 class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 

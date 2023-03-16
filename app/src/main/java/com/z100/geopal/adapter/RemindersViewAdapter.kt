@@ -1,7 +1,6 @@
 package com.z100.geopal.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.z100.geopal.R
-import com.z100.geopal.entity.Reminder
+import com.z100.geopal.pojo.Reminder
 
 class RemindersViewAdapter(private val context: Context, private val rvData: List<Reminder>) :
     RecyclerView.Adapter<RemindersViewAdapter.ItemViewHolder>() {

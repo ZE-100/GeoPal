@@ -2,16 +2,13 @@ package com.z100.geopal.service
 
 import android.content.ContentValues
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.z100.geopal.R
 import com.z100.geopal.database.entity.LocationContract
 import com.z100.geopal.database.entity.NetworkContract
 import com.z100.geopal.database.entity.ReminderContract
 import com.z100.geopal.database.helper.ReminderDBHelper
-import com.z100.geopal.entity.Location
-import com.z100.geopal.entity.Network
-import com.z100.geopal.entity.Reminder
+import com.z100.geopal.pojo.Location
+import com.z100.geopal.pojo.Network
+import com.z100.geopal.pojo.Reminder
 
 class TestDataService(context: Context) {
 
