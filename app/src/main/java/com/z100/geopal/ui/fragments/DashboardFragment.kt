@@ -1,29 +1,26 @@
 package com.z100.geopal.ui.fragments
 
 import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
 import android.graphics.Color.TRANSPARENT
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
 import android.view.Gravity.BOTTOM
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.inputmethod.InputMethodManager
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.z100.geopal.R
 import com.z100.geopal.adapter.RemindersViewAdapter
+import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.FragmentDashboardBinding
-import com.z100.geopal.entity.Location
-import com.z100.geopal.entity.Network
-import com.z100.geopal.entity.Reminder
 
 class DashboardFragment : Fragment() {
 
@@ -84,17 +81,10 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val reminders = listOf( //TODO: Remove
-            Reminder(null, "Buy Heida in Coop", Location("Brig", 42.23123, 41.23123), null),
-            Reminder(null, "Go get some beer", Location("Visp", 43.51234, 42.12312), null),
-            Reminder(null, "Stop being an alcoholic", null, Network("BrigFi", "SSID")),
-            Reminder(null, "Program JSbb++", null, Network("Blatten-WiFi", "SSID")),
-            Reminder(null, "Start process of self-hatred", Location("Hansland", 69.123123, 42.0123), null),
-            Reminder(null, "Project own issues on JSbb++", null, Network("ZLI-6969", "SSID")),
-            Reminder(null, "Die", Location("Zürich", 44.4123, 43.2323), null)
-        )
 
-        val adapter = RemindersViewAdapter(reminders)
+        val dbHelper = ReminderDBHelper(requireContext())
+
+        val adapter = RemindersViewAdapter(requireContext(), dbHelper.findAllReminders())
         binding.rvRemindersList.setHasFixedSize(false)
         binding.rvRemindersList.adapter = adapter
 

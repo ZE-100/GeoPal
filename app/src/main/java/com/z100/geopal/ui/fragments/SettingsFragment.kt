@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.z100.geopal.MainActivity
 import com.z100.geopal.databinding.FragmentSettingsBinding
 import com.z100.geopal.service.TestDataService
 
@@ -27,15 +28,20 @@ class SettingsFragment : Fragment() {
 
         testDataService = TestDataService(requireContext())
 
-        binding.swTestMode.setOnCheckedChangeListener {
-            _, isChecked ->
-            if (isChecked) testDataService.addTestRemindersToDB()
-            else testDataService.removeTestRemindersFromDB()
-        }
+        setupBindings()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupBindings() {
+        binding.swTestMode.isChecked = MainActivity.spDataService.getSwitchTestMode()
+        binding.swTestMode.setOnCheckedChangeListener {
+                _, isChecked -> MainActivity.spDataService.switchTestMode()
+            if (isChecked) testDataService.addTestRemindersToDB()
+            else testDataService.removeTestRemindersFromDB()
+        }
     }
 }

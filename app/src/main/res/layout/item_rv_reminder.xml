@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/dialog_element"
+        android:layout_margin="8dp"
         android:id="@+id/ll_reminder_layout"
         android:background="@drawable/reminder_element_bg">
 
