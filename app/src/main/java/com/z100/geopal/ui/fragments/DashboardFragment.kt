@@ -14,12 +14,18 @@ import android.view.Window
 import android.widget.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.z100.geopal.R
 import com.z100.geopal.adapter.RemindersViewAdapter
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.FragmentDashboardBinding
+import com.z100.geopal.pojo.NominatimLocation
 import com.z100.geopal.pojo.NominatimLocationDTO
 import com.z100.geopal.service.ApiRequestService
+import org.json.JSONArray
+import org.json.JSONObject
 
 class DashboardFragment : Fragment() {
 
@@ -96,12 +102,15 @@ class DashboardFragment : Fragment() {
         val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
-        var dropDownItems: List<NominatimLocationDTO> = ArrayList()
-        apiService.getLocationSearchResults(location) {
-            res, _ -> dropDownItems = res!!
-                adapter.addAll(dropDownItems.map {
-                    it.displayName
-                }.toList())
+        var dropDownItems: MutableList<NominatimLocation> = mutableListOf()
+        apiService.geshzt(location) {
+            res, _ ->
+            val jsonArray = JSONArray(res)
+
+            for (i in 0 until jsonArray.length()) {
+                dropDownItems.add(createNominationFromJson(jsonArray.getJSONObject(i)))
+                adapter.add(jsonArray.getJSONObject(i).getString("display_name"))
+            }
         }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -119,5 +128,14 @@ class DashboardFragment : Fragment() {
             "${description.toString()} : ${location.toString()}",
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun createNominationFromJson(json: JSONObject): NominatimLocation {
+        return NominatimLocation(
+            json.getString("place_id").toLong(),
+            json.getString("display_name"),
+            json.getString("lat").toDouble(),
+            json.getString("lon").toDouble()
+        )
     }
 }

@@ -5,21 +5,19 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.z100.geopal.pojo.NominatimLocationDTO
 import java.nio.charset.StandardCharsets.UTF_8
 
-class GsonRequest<Clazz>(
+class NominatimLocationRequest(
     method: Int,
     url: String,
-    clazz: Class<*>,
-    listener: Response.Listener<Clazz>,
+    listener: Response.Listener<List<NominatimLocationDTO>>,
     errorListener: Response.ErrorListener
-) : Request<Clazz>(method, url, errorListener) {
+) : Request<List<NominatimLocationDTO>>(method, url, errorListener) {
 
     private val mLock = Any()
 
-    private val mClazz: Class<*> = clazz
-
-    private var mListener: Response.Listener<Clazz>? = listener
+    private var mListener: Response.Listener<List<NominatimLocationDTO>>? = listener
 
     private var mParams: MutableMap<String, String>? = null
 
@@ -27,20 +25,20 @@ class GsonRequest<Clazz>(
 
     private var mHeaders: MutableMap<String, String>? = null
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<Clazz> {
+    override fun parseNetworkResponse(response: NetworkResponse?): Response<List<NominatimLocationDTO>> {
 
         print("Network response: ${String(response!!.data, UTF_8)}")
 
-        val parsed = try {
-            Gson().fromJson(String(response.data, UTF_8), mClazz) as Clazz
+        val parsed: List<NominatimLocationDTO> = try {
+            Gson().fromJson<List<NominatimLocationDTO>>(String(response.data, UTF_8), List::class.java)
         } catch (e: Exception) {
             throw RuntimeException("Could not parse object: " + (response.data?.toString() ?: "[data null]"), e)
         }
         return Response.success(parsed, null)
     }
 
-    override fun deliverResponse(response: Clazz?) {
-        var kListener: Response.Listener<Clazz>?
+    override fun deliverResponse(response: List<NominatimLocationDTO>?) {
+        var kListener: Response.Listener<List<NominatimLocationDTO>>?
         synchronized(mLock) {
             kListener = mListener
         }
@@ -56,7 +54,7 @@ class GsonRequest<Clazz>(
         }
     }
 
-    fun withParam(name: String, value: String): GsonRequest<Clazz> {
+    fun withParam(name: String, value: String): NominatimLocationRequest {
         if (mParams == null)
             mParams = HashMap()
         mParams!![name] = value
@@ -67,7 +65,7 @@ class GsonRequest<Clazz>(
         return mParams?:super.getParams()
     }
 
-    fun withBody(body: Any): GsonRequest<Clazz> {
+    fun withBody(body: Any): NominatimLocationRequest {
         mBody = Gson().toJson(body)
         return this
     }
@@ -76,7 +74,7 @@ class GsonRequest<Clazz>(
         return mBody?.toByteArray() ?: super.getBody()
     }
 
-    fun withHeader(key: String, value: String): GsonRequest<Clazz> {
+    fun withHeader(key: String, value: String): NominatimLocationRequest {
         if (mHeaders == null)
             mHeaders = HashMap()
         mHeaders?.put(key, value)
