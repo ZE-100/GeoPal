@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -8,5 +7,20 @@
         tools:context=".MainActivity">
 
     <include layout="@layout/content_main" />
+
+    <LinearLayout style="@style/dialog_element"
+            android:layout_gravity="bottom"
+            android:elevation="2dp"
+            android:background="@drawable/navbar_background">
+
+        <Button android:id="@+id/btn_to_dashboard"
+                android:text="Dashboard"
+                style="@style/button_save" />
+
+        <Button android:id="@+id/btn_to_settings"
+                android:text="Settings"
+                android:layout_marginStart="50dp"
+                style="@style/button_cancel" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

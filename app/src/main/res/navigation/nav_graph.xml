@@ -10,5 +10,18 @@
             android:name="com.z100.geopal.ui.fragments.DashboardFragment"
             android:label="@string/first_fragment_label"
             tools:layout="@layout/fragment_dashboard">
+
+        <action android:id="@+id/action_dashboard_to_settings"
+                app:destination="@id/SettingsDashboard" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/SettingsDashboard"
+            android:name="com.z100.geopal.ui.fragments.SettingsFragment"
+            android:label="@string/first_fragment_label"
+            tools:layout="@layout/fragment_settings">
+
+        <action android:id="@+id/action_settings_to_dashboard"
+            app:destination="@id/DashboardFragment" />
     </fragment>
 </navigation>

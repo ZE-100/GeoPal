@@ -1,5 +1,7 @@
 package com.z100.geopal.adapter
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.z100.geopal.R
 import com.z100.geopal.entity.Reminder
 
-class RemindersViewAdapter(private val rvData: List<Reminder>) :
+class RemindersViewAdapter(private val context: Context, private val rvData: List<Reminder>) :
     RecyclerView.Adapter<RemindersViewAdapter.ItemViewHolder>() {
+
+    private fun getDrawable(reminder: Reminder): Int =
+        reminder.location?.drawable ?: reminder.network!!.drawable
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val listItem: View = LayoutInflater.from(parent.context)
@@ -22,8 +27,10 @@ class RemindersViewAdapter(private val rvData: List<Reminder>) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val reminder: Reminder = rvData[position]
 
+        holder.ivIcon.setImageDrawable(context.getDrawable(getDrawable(reminder)))
         holder.tvTitle.text = reminder.description
-        holder.tvLocation.text = reminder.title
+        holder.tvLocation.text = if (reminder.location == null) reminder.network!!.name else reminder.location.name
+
         holder.linearLayout.setOnLongClickListener {
             holder.btnDeleteReminder.isVisible = !holder.btnDeleteReminder.isVisible
             true
@@ -39,6 +46,7 @@ class RemindersViewAdapter(private val rvData: List<Reminder>) :
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var ivIcon: ImageView = itemView.findViewById(R.id.iv_reminder_icon)
         var tvTitle: TextView = itemView.findViewById(R.id.tv_reminder_title)
         var tvLocation: TextView = itemView.findViewById(R.id.tv_reminder_location)
         var btnDeleteReminder: ImageView = itemView.findViewById(R.id.btn_delete_reminder)
