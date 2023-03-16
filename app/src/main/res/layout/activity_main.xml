@@ -15,10 +15,12 @@
 
         <Button android:id="@+id/btn_to_dashboard"
                 android:text="Dashboard"
+                android:enabled="false"
                 style="@style/button_save" />
 
         <Button android:id="@+id/btn_to_settings"
                 android:text="Settings"
+                android:enabled="true"
                 android:layout_marginStart="50dp"
                 style="@style/button_cancel" />
     </LinearLayout>
