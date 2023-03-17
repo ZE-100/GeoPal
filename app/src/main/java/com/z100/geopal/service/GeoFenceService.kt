@@ -13,7 +13,6 @@ import android.content.Intent
 import android.location.Location
 import android.os.Handler
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
@@ -23,6 +22,7 @@ import com.z100.geopal.pojo.Reminder
 import com.z100.geopal.util.Globals.Factory.NOTIFICATION_CHANNEL_ID
 import kotlinx.coroutines.*
 import java.lang.Runnable
+import java.util.*
 import kotlin.coroutines.resumeWithException
 
 class GeoFenceService : JobService() {
@@ -70,6 +70,7 @@ class GeoFenceService : JobService() {
     }
 
     private fun createGeofences(reminder: Reminder) {
+        reminder.uuid = UUID.randomUUID().toString()
         val geofence = Geofence.Builder().apply {
             setRequestId(reminder.uuid)
             setCircularRegion(
@@ -128,7 +129,9 @@ class GeoFenceService : JobService() {
                             Log.d("AS", "Cancelled")
                         }
                     } else {
-                        continuation.resumeWithException(Exception("Unable to get location"))
+                        continuation.resume(Location("")) {
+                            Log.d("AS", "Unable to get location")
+                        }
                     }
                 }.addOnFailureListener { e: Exception ->
                     continuation.resumeWithException(e)
@@ -159,6 +162,7 @@ class GeoFenceService : JobService() {
                 Log.d("inRangeOfGeoFence()", "Inside of GeoLocation : $distance")
                 val reminder = reminders.firstOrNull { reminder -> reminder.uuid == uuid }
                 sendNotification(reminder ?: createErrorEntry())
+                reminder?.alreadyReminded = true
                 return true
             }
         }
@@ -179,6 +183,8 @@ class GeoFenceService : JobService() {
     }
 
     private fun sendNotification(reminder: Reminder) {
+        if (reminder.alreadyReminded)
+            return
         sendNotification(reminder.description, reminder.location?.name ?: "Error")
     }
 

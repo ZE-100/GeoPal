@@ -9,7 +9,7 @@ data class Reminder(
     val network: Network?
 ) {
     var uuid: String = ""
-    var reminded: Boolean = false
+    var alreadyReminded: Boolean = false
 }
 
 data class Location(

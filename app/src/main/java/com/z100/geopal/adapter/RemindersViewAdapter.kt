@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.z100.geopal.R
-import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.pojo.Reminder
 
 class RemindersViewAdapter(private val context: Context, private val rvData: List<Reminder>) :
