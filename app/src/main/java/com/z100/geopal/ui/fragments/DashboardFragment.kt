@@ -21,8 +21,8 @@ import com.z100.geopal.databinding.FragmentDashboardBinding
 import com.z100.geopal.pojo.Location
 import com.z100.geopal.pojo.NominatimLocation
 import com.z100.geopal.pojo.Reminder
-import com.z100.geopal.service.ApiRequestService
-import org.json.JSONArray
+import com.z100.geopal.service.api.ApiRequestService
+import com.z100.geopal.service.api.Callback
 import org.json.JSONObject
 
 class DashboardFragment : Fragment() {
@@ -98,17 +98,16 @@ class DashboardFragment : Fragment() {
         spinner.adapter = adapter
 
         val dropDownItems: MutableList<NominatimLocation> = mutableListOf()
-        apiService.getLocationSearchResults(location) { res, _ ->
-            val jsonArray = JSONArray(res)
-            for (i in 0 until jsonArray.length()) {
-                dropDownItems.add(createNominationFromJson(jsonArray.getJSONObject(i)))
-                adapter.add(jsonArray.getJSONObject(i).getString("display_name"))
-            }
-        }
+        apiService.getLocationSearchResults(location, Callback<List<NominatimLocation>> { res, _ ->
+            res?.forEach {
+                dropDownItems.add(it)
+                adapter.add(it.display_name)
+            } ?: adapter.add("Something went wrong!")
+        })
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, l: Long) {
-                dialog.findViewById<TextView>(R.id.et_reminder_location).text = dropDownItems[position].displayName
+                dialog.findViewById<TextView>(R.id.et_reminder_location).text = dropDownItems[position].display_name
                 dialog.findViewById<TextView>(R.id.tv_reminder_location_lat).text = dropDownItems[position].lat.toString()
                 dialog.findViewById<TextView>(R.id.tv_reminder_location_lon).text = dropDownItems[position].lon.toString()
             }
