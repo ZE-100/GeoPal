@@ -3,4 +3,27 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
+
+
+
+    <!-- Light mode colors -->
+    <color name="lightText">#000000</color>
+    <color name="light">#FFFFFF</color>
+    <color name="lightPrimary">#BE9FE1</color>
+    <color name="lightSecondary">#C9B6E4</color>
+    <color name="lightThird">#E1CCEC</color>
+    <color name="lightFourth">#F1F1F6</color>
+
+    <!-- Dark mode colors -->
+    <color name="darkText">#FFFFFF</color>
+    <color name="dark">#222222</color>
+    <color name="darkPrimary">#371B58</color>
+    <color name="darkSecondary">#4C3575</color>
+    <color name="darkThird">#5B4B8A</color>
+    <color name="darkFourth">#7858A6</color>
 </resources>

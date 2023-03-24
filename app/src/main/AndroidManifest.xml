@@ -13,17 +13,16 @@
     <application
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
+            android:enableOnBackInvokedCallback="true"
             android:fullBackupContent="@xml/backup_rules"
             android:icon="@drawable/app_icon_high"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:enableOnBackInvokedCallback="true"
             android:theme="@style/Theme.GeoPal"
             tools:targetApi="31">
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.GeoPal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,10 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.GeoFenceService"
+
+        <service
+                android:name=".service.geo.GeoFenceService"
                 android:enabled="true"
-                android:permission="android.permission.BIND_JOB_SERVICE"
-                android:exported="true"/>
+                android:exported="true"
+                android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
     </application>
 
 </manifest>

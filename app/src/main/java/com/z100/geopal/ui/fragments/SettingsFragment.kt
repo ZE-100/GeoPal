@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.z100.geopal.activity.MainActivity.Factory.spDataService
+import com.z100.geopal.MainActivity.Factory.spDataService
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.FragmentSettingsBinding
 import com.z100.geopal.service.data.TestDataService
