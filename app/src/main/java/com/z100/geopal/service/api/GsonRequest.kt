@@ -7,10 +7,7 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.z100.geopal.pojo.NominatimLocation
 import java.lang.reflect.Type
-
 
 /**
  * Generic approach based on [StringRequest]
@@ -50,11 +47,6 @@ class GsonRequest<T>(
         Log.d("GsonRequest", "Network response: ${String(response.data)}")
 
         return Response.success(parsed, null)
-    }
-
-    private fun getList(jsonArray: String, clazz: Class<T>): List<T>? {
-        val typeOfT: Type = TypeToken.getParameterized(MutableList::class.java, clazz).type
-        return Gson().fromJson(jsonArray, typeOfT)
     }
 
     override fun deliverResponse(response: T?) {
