@@ -15,6 +15,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.Window
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.z100.geopal.MainActivity
 import com.z100.geopal.R
 import com.z100.geopal.MainActivity.Factory.dbHelper
 import com.z100.geopal.adapter.RemindersViewAdapter
@@ -24,6 +25,7 @@ import com.z100.geopal.pojo.NominatimLocation
 import com.z100.geopal.pojo.Reminder
 import com.z100.geopal.service.api.ApiRequestService
 import com.z100.geopal.service.api.Callback
+import kotlinx.coroutines.MainScope
 import java.util.*
 
 class DashboardFragment : Fragment() {
@@ -161,6 +163,7 @@ class DashboardFragment : Fragment() {
             Location(nameHolder, latHolder, lonHolder), null)
 
         dbHelper.insertReminder(reminder)
+        MainActivity.rescheduleJob(requireContext(), requireActivity().packageName)
         setupRecyclerView()
     }
 }

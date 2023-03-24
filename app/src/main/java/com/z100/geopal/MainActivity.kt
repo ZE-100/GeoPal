@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity() {
         lateinit var spDataService: SPDataService
         lateinit var requestQueue: RequestQueue
         lateinit var dbHelper: ReminderDBHelper
+
+        fun rescheduleJob(context: Context, packageName: String) {
+            val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            val jobInfo: JobInfo = JobInfo.Builder(11, ComponentName(packageName, GeoFenceService::class.java.name)).build()
+            jobScheduler.schedule(jobInfo)
+        }
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -142,14 +148,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        val jobInfo: JobInfo = JobInfo.Builder(11, ComponentName(packageName, GeoFenceService::class.java.name)).build()
-        jobScheduler.schedule(jobInfo)
+        rescheduleJob(this, packageName)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         setupMenuButtons()
+    }
+
+    private fun scheduleJob() {
+        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val jobInfo: JobInfo = JobInfo.Builder(11, ComponentName(packageName, GeoFenceService::class.java.name)).build()
+        jobScheduler.schedule(jobInfo)
     }
 
     private fun setupMenuButtons() {

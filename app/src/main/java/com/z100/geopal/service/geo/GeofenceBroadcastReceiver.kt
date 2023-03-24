@@ -1,3 +1,5 @@
+package com.z100.geopal.service.geo
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -13,7 +15,6 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.pojo.Reminder
-import com.z100.geopal.service.GeofenceReceiver
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 

@@ -1,6 +1,5 @@
-package com.z100.geopal.service
+package com.z100.geopal.service.geo
 
-import GeofenceBroadcastReceiver
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
@@ -61,7 +60,6 @@ class GeoFenceService : JobService() {
                 val currentLocation = getCurrentPosition()
                 inRangeOfGeoFence(currentLocation)
             }
-
             handler.postDelayed(runnable, 1000 * 5)
         }
 
@@ -89,7 +87,6 @@ class GeoFenceService : JobService() {
         Log.d("onStopJob()", "Service destroyed")
         return true
     }
-
 
     @SuppressLint("MissingPermission")
     private fun startGeofencing() {

@@ -1,4 +1,4 @@
-package com.z100.geopal.service
+package com.z100.geopal.service.geo
 
 import android.content.BroadcastReceiver
 import android.content.Context
