@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private var permissionReallyDenied = false
+    var btnPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -68,6 +68,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val uri = Uri.fromParts("package", packageName, null)
+
+        if (btnPressed && uri != null && uri.toString().startsWith("package:")) {
+            btnPressed = false
+            checkPermissionsAndSetup()
+        }
+    }
+
     private fun isLocationPermissionPermanentlyDenied(): Boolean {
         var permanentlyDenied = false
 
@@ -78,6 +89,7 @@ class MainActivity : AppCompatActivity() {
 
         return permanentlyDenied
     }
+
     private fun checkPermissionsAndSetup() {
         if (appHasPermissions()) {
             installSplashScreen()
@@ -113,9 +125,10 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.permission_really_denied_title)
             .setMessage(R.string.permission_really_denied_message)
             .setPositiveButton("Go to settings") { _, _ ->
+                btnPressed = true
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = Uri.fromParts("package", packageName, null)
-                startActivityForResult(intent, 420)
+                startActivityForResult(intent, 69)
             }
             .setCancelable(false)
             .create().show()
