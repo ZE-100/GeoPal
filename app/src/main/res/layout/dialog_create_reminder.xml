@@ -38,16 +38,6 @@
 
     </LinearLayout>
 
-    <LinearLayout style="@style/dialog_element">
-
-            <Button android:id="@+id/btn_reminder_cancel"
-                    android:text="@string/create_reminder_btn_cancel"
-                    style="@style/button_cancel" />
-
-            <Button android:id="@+id/btn_reminder_save"
-                    android:text="@string/create_reminder_btn_save"
-                    style="@style/button_save" />
-    </LinearLayout>
 
     <LinearLayout style="@style/dialog_element">
 
@@ -60,13 +50,14 @@
                 android:hint="@string/create_reminder_location_hint" />
     </LinearLayout>
 
-    <TextView android:id="@+id/tv_reminder_location_lat"
-            style="@style/edit_text_text"
-            android:visibility="invisible"
-            android:hint="@string/create_reminder_location_hint" />
+    <LinearLayout style="@style/dialog_element">
 
-    <TextView android:id="@+id/tv_reminder_location_lon"
-            style="@style/edit_text_text"
-            android:visibility="invisible"
-            android:hint="@string/create_reminder_location_hint" />
+            <Button android:id="@+id/btn_reminder_cancel"
+                    android:text="@string/create_reminder_btn_cancel"
+                    style="@style/button_cancel" />
+
+            <Button android:id="@+id/btn_reminder_save"
+                    android:text="@string/create_reminder_btn_save"
+                    style="@style/button_save" />
+    </LinearLayout>
 </LinearLayout>

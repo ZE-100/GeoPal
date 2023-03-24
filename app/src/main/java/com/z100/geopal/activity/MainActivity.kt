@@ -18,9 +18,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
+import com.z100.geopal.R
+import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.ActivityMainBinding
-import com.z100.geopal.service.GeoFenceService
-import com.z100.geopal.service.SPDataService
+import com.z100.geopal.service.api.ApiRequestService
+import com.z100.geopal.service.geo.GeoFenceService
+import com.z100.geopal.service.data.SPDataService
 import com.z100.geopal.ui.fragments.DashboardFragment
 import com.z100.geopal.ui.fragments.SettingsFragment
 
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     companion object Factory {
         lateinit var spDataService: SPDataService
         lateinit var requestQueue: RequestQueue
+        lateinit var dbHelper: ReminderDBHelper
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         checkAppPermissions()
 
-        spDataService = SPDataService(getSharedPreferences("preferences", Context.MODE_PRIVATE))
-        requestQueue = Volley.newRequestQueue(this)
+        if (!appPermissionsGranted())
+            this.startActivity(Intent(this, AppPermissionsActivity::class.java))
+        else {
+            spDataService = SPDataService(getSharedPreferences("preferences", MODE_PRIVATE))
+            requestQueue = Volley.newRequestQueue(this)
+            dbHelper = ReminderDBHelper(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
