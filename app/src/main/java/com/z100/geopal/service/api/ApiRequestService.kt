@@ -2,7 +2,7 @@ package com.z100.geopal.service.api
 
 import com.android.volley.Request.Method.GET
 import com.google.gson.reflect.TypeToken
-import com.z100.geopal.activity.MainActivity
+import com.z100.geopal.MainActivity
 import com.z100.geopal.util.Globals.Factory.API_NOMINATIM_REQUEST
 
 /**

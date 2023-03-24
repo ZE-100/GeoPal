@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.GeoPal" parent="Base.Theme.GeoPal" />
+
+    <style name="Theme.GeoPal.Fullscreen" parent="Theme.GeoPal">
+        <item name="android:actionBarStyle">@style/Widget.Theme.GeoPal.ActionBar.Fullscreen</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
 </resources>

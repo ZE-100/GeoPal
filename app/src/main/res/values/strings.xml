@@ -17,6 +17,24 @@
     <string name="create_reminder_btn_save">Save</string>
     <string name="reminder_location_hint">Location loading...</string>
     <string name="reminder_title_hint">Title loading...</string>
+
+    <!-- Permission denied dialog -->
+    <string name="permission_denied_title">Permissions needed</string>
+    <string name="permission_denied_message">
+        GeoPal needs access to your location in order to run.
+        Please reconsider your choice and allow them.
+    </string>
+    <string name="permission_denied_button_yes">Allow</string>
+    <string name="permission_denied_button_no">Exit</string>
+
+    <string name="permission_really_denied_title">Permissions really needed</string>
+    <string name="permission_really_denied_message">
+        GeoPal can\'t request location access on itself anymore.
+        You have to do it manually now.
+    </string>
+    <string name="permission_really_denied_button_yes">Go to settings</string>
+    <string name="permission_really_denied_button_no">Exit</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -33,4 +51,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_start_up_splash_screen">StartUpSplashScreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

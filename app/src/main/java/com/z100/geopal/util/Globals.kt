@@ -1,5 +1,6 @@
 package com.z100.geopal.util
 
+import android.Manifest.permission.*
 import com.z100.geopal.service.data.types.SPType
 
 /**
@@ -25,5 +26,10 @@ class Globals {
 
         /* SharedPreferences-properties */
         val SP_SETTINGS_TEST_MODE_TOGGLE = SPType("settings-test-mode-toggle", Boolean::class)
+
+        /* Application */
+        val APP_PERMISSIONS_NEEDED = arrayOf(
+            ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION
+        )
     }
 }

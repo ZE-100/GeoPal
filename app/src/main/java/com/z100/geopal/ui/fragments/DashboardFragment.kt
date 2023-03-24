@@ -16,7 +16,7 @@ import android.view.Window
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.z100.geopal.R
-import com.z100.geopal.activity.MainActivity.Factory.dbHelper
+import com.z100.geopal.MainActivity.Factory.dbHelper
 import com.z100.geopal.adapter.RemindersViewAdapter
 import com.z100.geopal.databinding.FragmentDashboardBinding
 import com.z100.geopal.pojo.Location
