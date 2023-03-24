@@ -1,39 +1,31 @@
-package com.z100.geopal.service
+package com.z100.geopal.service.data
 
 import android.content.Context
-import com.z100.geopal.database.contracts.ReminderContract
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.pojo.Location
 import com.z100.geopal.pojo.Network
 import com.z100.geopal.pojo.Reminder
 
-class TestDataService(private val context: Context) {
+/**
+ * Service to insert test data into the local
+ * database. In this case: Different reminders
+ *
+ * @author Z-100
+ * @since 1.0
+ */
+class TestDataService(context: Context) {
 
     private val dbHelper = ReminderDBHelper(context)
 
     fun addTestRemindersToDB() {
-        provideRemindersList().forEach {
-            ReminderDBHelper(context).insertReminder(it)
-        }
-//        db.close() //Thierry was here TODO: Add back in
+        testReminders().forEach { dbHelper.insertReminder(it) }
     }
 
     fun removeTestRemindersFromDB() {
-        val db = dbHelper.writableDatabase
-
-        // Define 'where' part of query.
-        val selection = "${ReminderContract.ReminderEntry.COLUMN_DESCRIPTION} LIKE ?"
-
-        provideRemindersList().forEach {
-            // Specify arguments in placeholder order.
-            val selectionArgs = arrayOf(it.description)
-
-            // Issue SQL statement.
-            val deletedRows = db.delete(ReminderContract.ReminderEntry.TABLE_NAME, selection, selectionArgs)
-        }
+        testReminders().forEach { dbHelper.deleteReminder(arrayOf(it.description)) }
     }
 
-    fun provideRemindersList(): List<Reminder> {
+    private fun testReminders(): List<Reminder> {
         return listOf(
             Reminder(null, "Buy bread at store", Location("Paris", 42.23123, 41.23123), null),
             Reminder(null, "Get some sleep at Hotel", Location("Berlin", 43.51234, 42.12312), null),

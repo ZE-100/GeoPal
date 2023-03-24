@@ -19,6 +19,16 @@ import com.z100.geopal.pojo.Location
 import com.z100.geopal.pojo.Network
 import com.z100.geopal.pojo.Reminder
 
+/**
+ * Helper to handle various database transactions
+ * of the [Reminder]-table.
+ * @see ReminderContract
+ * @see LocationContract
+ * @see NetworkContract
+ *
+ * @author Z-100
+ * @since 1.0
+ */
 class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
@@ -30,12 +40,6 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         db.execSQL(SQL_CREATE_REMINDER_TABLE)
         db.execSQL(SQL_CREATE_LOCATION_TABLE)
         db.execSQL(SQL_CREATE_NETWORK_TABLE)
-    }
-
-    fun deleteAll() {
-        writableDatabase.delete(ReminderContract.ReminderEntry.TABLE_NAME, null, null)
-        writableDatabase.delete(LocationContract.LocationEntry.TABLE_NAME, null, null)
-        writableDatabase.delete(NetworkContract.NetworkEntry.TABLE_NAME, null, null)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -79,6 +83,17 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         }
 
         writableDatabase.insertOrThrow("reminder", null, reminderValues)
+    }
+
+    fun deleteAll() {
+        writableDatabase.delete(ReminderContract.ReminderEntry.TABLE_NAME, null, null)
+        writableDatabase.delete(LocationContract.LocationEntry.TABLE_NAME, null, null)
+        writableDatabase.delete(NetworkContract.NetworkEntry.TABLE_NAME, null, null)
+    }
+
+    fun deleteReminder(arguments: Array<String>) {
+        val selection = "${ReminderContract.ReminderEntry.COLUMN_DESCRIPTION} LIKE ?"
+        writableDatabase.delete(ReminderContract.ReminderEntry.TABLE_NAME, selection, arguments)
     }
 
     fun findAllReminders(): List<Reminder> {
