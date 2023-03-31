@@ -19,5 +19,5 @@ object LocationContract {
         );
     """
 
-        const val SQL_DELETE_LOCATION_TABLE = "DROP TABLE IF EXISTS ${LocationEntry.TABLE_NAME}"
+    const val SQL_DELETE_LOCATION_TABLE = "DROP TABLE IF EXISTS ${LocationEntry.TABLE_NAME}"
 }
