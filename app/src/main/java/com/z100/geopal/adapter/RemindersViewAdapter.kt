@@ -40,7 +40,8 @@ class RemindersViewAdapter(private val context: Context, private val rvData: Lis
 
         holder.linearLayout.setOnClickListener {
             if (holder.isDeletable) {
-//                ReminderDBHelper(context).deleteByUUID(reminder.uuid) //TODO
+                // TODO: Add clickable delete button
+//                ReminderDBHelper(context).deleteByUUID(reminder.uuid)
             }
         }
     }
