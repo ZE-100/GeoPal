@@ -1,12 +1,12 @@
 package com.z100.geopal.service.api
 
-import android.util.Log
 import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
+import com.z100.geopal.util.Logger.Factory.log
 import java.lang.reflect.Type
 
 /**
@@ -40,11 +40,11 @@ class GsonRequest<T>(
         val parsed: T = try {
             Gson().fromJson(String(response!!.data), mClazzType)
         } catch (e: Exception) {
-            val errorMsg = "Could not parse object: ${response?.data?.let { String(it) }}"
-            Log.e("GsonRequest", errorMsg)
-            return Response.error(VolleyError(errorMsg))
+            val errorMessage = log(this.javaClass, "Could not parse object: {}",
+                response?.data?.let { String(it) } ?: "")
+            return Response.error(VolleyError(errorMessage))
         }
-        Log.d("GsonRequest", "Network response: ${String(response.data)}")
+        log(this.javaClass, "Network response: {}", String(response.data))
 
         return Response.success(parsed, null)
     }

@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Handler
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
@@ -19,6 +18,8 @@ import com.google.android.gms.location.LocationServices
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.pojo.Reminder
 import com.z100.geopal.util.Globals.Factory.NOTIFICATION_CHANNEL_ID
+import com.z100.geopal.util.Logger.Factory.log
+import com.z100.geopal.util.Logger.LogMode.ERROR
 import kotlinx.coroutines.*
 import java.lang.Runnable
 import java.util.*
@@ -41,7 +42,7 @@ class GeoFenceService : JobService() {
 
         runnable = Runnable {}
 
-        Log.d("onStartJob()", "GPS-service started")
+        log(this.javaClass, "GPS-Service started")
 
         setupNotificationManager()
 
@@ -84,7 +85,7 @@ class GeoFenceService : JobService() {
 
     override fun onStopJob(params: JobParameters?): Boolean {
         handler.removeCallbacks(runnable)
-        Log.d("onStopJob()", "Service destroyed")
+        log(this.javaClass, "GPS-Service destroyed")
         return true
     }
 
@@ -99,10 +100,10 @@ class GeoFenceService : JobService() {
 
         geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
             addOnSuccessListener {
-                Log.d("startGeofencing()", "Geofence added successfully")
+                log(this.javaClass, "Geofence added successfully")
             }
             addOnFailureListener {
-                Log.e("startGeofencing()", "Failed to add geofence: ${it.message}")
+                log(ERROR, this.javaClass, "Failed to add geofence: {}", it.message ?: "")
             }
         }
     }
@@ -120,31 +121,27 @@ class GeoFenceService : JobService() {
         return withContext(Dispatchers.IO) {
             val locationTask = LocationServices.getFusedLocationProviderClient(context).lastLocation
             suspendCancellableCoroutine { continuation ->
-                locationTask.addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        continuation.resume(location) {
-                            Log.d("AS", "Cancelled")
+                locationTask.addOnSuccessListener {
+                    if (it != null) {
+                        continuation.resume(it) {
+                            log(this.javaClass, "Location search cancelled")
                         }
                     } else {
                         continuation.resume(Location("")) {
-                            Log.d("AS", "Unable to get location")
+                            log(this.javaClass, "Unable to get location")
                         }
                     }
-                }.addOnFailureListener { e: Exception ->
-                    continuation.resumeWithException(e)
-                }
-                continuation.invokeOnCancellation {
+                }.addOnFailureListener { continuation.resumeWithException(it) }
 
-                }
+                continuation.invokeOnCancellation {}
             }
         }
     }
 
     private fun inRangeOfGeoFence(currentLocation: Location): Boolean {
-        Log.d("inRangeOfGeoFence()", "Start Geofence matching")
+        log(this.javaClass, "Start Geofence matching")
 
         geofenceList.forEach {
-
             val geofenceLocation = Location("").apply {
                 latitude = it.latitude
                 longitude = it.longitude
@@ -152,18 +149,19 @@ class GeoFenceService : JobService() {
 
             val uuid = it.requestId
 
-            Log.d("inRangeOfGeoFence()", "GoeLoc: $geofenceLocation")
+            log(this.javaClass, "Currently checking location: {}", geofenceLocation.toString())
 
             val distance = currentLocation.distanceTo(geofenceLocation)
             if (distance <= it.radius) {
-                Log.d("inRangeOfGeoFence()", "Inside of GeoLocation : $distance")
+                log(this.javaClass, "Inside of GeoLocation: {}", distance.toString())
                 val reminder = reminders.firstOrNull { reminder -> reminder.uuid == uuid }
                 sendNotification(reminder ?: createErrorEntry())
                 reminder?.alreadyReminded = true
                 return true
+            } else {
+                log(this.javaClass, "Not inside of GeoLocation: {}", distance.toString())
             }
         }
-        Log.d("inRangeOfGeoFence()", "Not inside of GeoLocation")
         return false
     }
 
@@ -194,7 +192,7 @@ class GeoFenceService : JobService() {
                 priority = NotificationCompat.PRIORITY_DEFAULT
             }.build()
 
-        Log.d("sendNotification()", "Create notification: $title")
+        log(this.javaClass, "Create notification with title: {}", title)
 
         notificationManager.notify(123, notification)
     }

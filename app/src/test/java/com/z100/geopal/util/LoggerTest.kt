@@ -1,5 +1,6 @@
 package com.z100.geopal.util
 
+import com.z100.geopal.util.Logger.Factory.log
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
@@ -16,7 +17,7 @@ class LoggerTest {
 
         val input = "No params"
 
-        val logEntry = Logger.log(this.javaClass, input)
+        val logEntry = log(this.javaClass, input)
 
         assertEquals(input, logEntry)
     }
@@ -28,7 +29,7 @@ class LoggerTest {
         val inputParam = "Wow, it works"
         val parameterizedInput = input.replaceFirst("{}", inputParam)
 
-        val logEntry = Logger.log(this.javaClass, input, inputParam)
+        val logEntry = log(this.javaClass, input, inputParam)
 
         assertEquals(input, logEntry)
     }
@@ -43,7 +44,7 @@ class LoggerTest {
         var parameterizedInput = input.replaceFirst("{}", inputParam)
         parameterizedInput = input.replaceFirst("{}", inputParam2)
 
-        val logEntry = Logger.log(this.javaClass, input, inputParam, inputParam2)
+        val logEntry = log(this.javaClass, input, inputParam, inputParam2)
 
         assertEquals(input, logEntry)
     }
