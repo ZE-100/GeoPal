@@ -13,6 +13,7 @@ import com.z100.geopal.service.data.types.SPType
  */
 class Globals {
     companion object Factory {
+
         /* API-properties*/
         const val API_NOMINATIM_REQUEST = "https://nominatim.openstreetmap.org/search.php?format=json&accept-language&limit=3&q="
 
@@ -28,8 +29,7 @@ class Globals {
         val SP_SETTINGS_TEST_MODE_TOGGLE = SPType("settings-test-mode-toggle", Boolean::class)
 
         /* Application */
-        val APP_PERMISSIONS_NEEDED = arrayOf(
-            ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION
-        )
+        val APP_PERMISSIONS_NEEDED = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
+        const val LOG_MODE_INVALID = "Log mode invalid!"
     }
 }
