@@ -1,82 +1,86 @@
 package com.z100.geopal.service.geo
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
-import android.app.PendingIntent
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.location.Location
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.Geofence
-import com.google.android.gms.location.GeofencingRequest
-import com.google.android.gms.location.GeofencingRequest.INITIAL_TRIGGER_ENTER
-import com.google.android.gms.location.LocationServices
-import com.z100.geopal.database.helper.ReminderDBHelper
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
+import com.google.android.gms.location.GeofenceStatusCodes.getStatusCodeString
+import com.google.android.gms.location.GeofencingEvent
 import com.z100.geopal.pojo.Reminder
+import com.z100.geopal.util.Globals.Factory.BACKGROUND_CHANNEL_ID
+import com.z100.geopal.util.Globals.Factory.BACKGROUND_CHANNEL_NAME
+import com.z100.geopal.util.Globals.Factory.NOTIFICATION_CHANNEL_ID
 import com.z100.geopal.util.Logger.Factory.log
+import com.z100.geopal.util.Logger.LogMode.ERROR
 
+/**
+ * Handles the event of the phone entering
+ * any of the provided Geofences - in this
+ * case sending a notification.
+ *
+ * @author Z-100
+ * @since 2.0
+ */
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
+
+    private lateinit var context: Context
+    private lateinit var notificationManager: NotificationManager
 
     private lateinit var reminders: List<Reminder>
 
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
 
-        reminders = ReminderDBHelper(context!!).findAllReminders()
+        this.context = context
+        this.notificationManager = setupNotificationManager()
 
-        reminders.forEach {
-            log(this.javaClass, "Current reminder from DB: {}", it.description)
-            createGeofence(context, it.location!!.lat, it.location.lon, it.uuid)
+        val geofencingEvent = intent?.let { GeofencingEvent.fromIntent(it) }
+
+        if (geofencingEvent?.hasError() == true) {
+            val errorMessage = getStatusCodeString(geofencingEvent.errorCode)
+            log(ERROR, this.javaClass, "Failed to retrieve Geofence: {}", errorMessage)
+            return
         }
+
+        if (geofencingEvent!!.geofenceTransition != GEOFENCE_TRANSITION_ENTER)
+            log(this.javaClass, "Geofence:({}) didn't enter: {}")
+
+        geofencingEvent.triggeringGeofences?.forEach {
+            reminders.forEach { that -> if (it.requestId == that.uuid) sendNotification(that) }
+        } ?: log(ERROR, this.javaClass, "Triggered Geofences null")
     }
 
-    @SuppressLint("MissingPermission")
-    private fun createGeofence(context: Context?, lat: Double, lon: Double, name: String) {
-        // Create a GeofencingClient instance
-        val geofencingClient = LocationServices.getGeofencingClient(context!!)
+    private fun setupNotificationManager(): NotificationManager {
+        val notificationManager = getSystemService(context, NotificationManager::class.java) as NotificationManager
 
-        // Get the current location of the phone
-        getCurrentPos(context) {
-            log(this.javaClass, "Current position: {}/{}", it.latitude.toString(), it.longitude.toString())
+        val notificationChannel = NotificationChannel(BACKGROUND_CHANNEL_ID, BACKGROUND_CHANNEL_NAME, IMPORTANCE_DEFAULT)
 
-            // Create a Geofence object
-            val geofence = Geofence.Builder()
-                .setRequestId(name)
-                .setCircularRegion(lat, lon, 1000f) // Meters
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-                .build()
+        notificationManager.createNotificationChannel(notificationChannel)
 
-            // Create a GeofencingRequest object
-            val geofencingRequest = GeofencingRequest.Builder()
-                .setInitialTrigger(INITIAL_TRIGGER_ENTER)
-                .addGeofence(geofence)
-                .build()
-
-            // Create a PendingIntent to handle the geofence transitions
-            val pendingIntent = Intent(context, GeofenceReceiver::class.java).let { intent ->
-                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            }
-
-            // Request for geofencing updates
-            geofencingClient.addGeofences(geofencingRequest, pendingIntent).run {
-                addOnSuccessListener { log(this.javaClass, "Geofence added successfully") }
-                addOnFailureListener { log(this.javaClass, "Error adding geofence: {}", it.message ?: "") }
-            }
-        }
+        return notificationManager
     }
 
-    private fun getCurrentPos(context: Context, callback: (Location) -> Unit) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    private fun sendNotification(reminder: Reminder) {
+        if (reminder.alreadyReminded) return
+        sendNotification(reminder.description, reminder.location?.name ?: "Error")
+    }
 
-        // TODO: Rewrite
-        if (ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                location?.let { callback(it) }
-            }.addOnFailureListener {
-                log(this.javaClass, "Error getting location: {}", it.message ?: "")
-            }
-        }
+    private fun sendNotification(title: String, description: String) {
+        val notification: Notification = NotificationCompat
+            .Builder(context, NOTIFICATION_CHANNEL_ID).apply {
+                setSmallIcon(com.z100.geopal.R.drawable.app_icon)
+                setContentTitle(title)
+                setContentText(description)
+                priority = NotificationCompat.PRIORITY_DEFAULT
+            }.build()
+
+        log(this.javaClass, "Created notification with title: {}", title)
+
+        notificationManager.notify(123, notification)
     }
 }

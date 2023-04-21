@@ -68,7 +68,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        rvRemindersListAdapter = RemindersViewAdapter(requireContext(), dbHelper.findAllReminders())
+        rvRemindersListAdapter = RemindersViewAdapter(requireContext(), listOf(*dbHelper.findAllReminders()))
 
         binding.rvRemindersList.setHasFixedSize(false)
         binding.rvRemindersList.adapter = rvRemindersListAdapter

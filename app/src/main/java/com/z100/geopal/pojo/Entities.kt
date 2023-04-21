@@ -1,6 +1,7 @@
 package com.z100.geopal.pojo
 
 import com.z100.geopal.R
+import java.util.*
 
 data class Reminder(
     val title: String?,
@@ -8,7 +9,7 @@ data class Reminder(
     val location: Location?,
     val network: Network?
 ) {
-    var uuid: String = ""
+    var uuid = UUID.randomUUID().toString()
     var alreadyReminded: Boolean = false
 }
 

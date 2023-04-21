@@ -96,7 +96,7 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         writableDatabase.delete(ReminderContract.ReminderEntry.TABLE_NAME, selection, arguments)
     }
 
-    fun findAllReminders(): List<Reminder> {
+    fun findAllReminders(): Array<Reminder> {
         val cursor = readableDatabase.query(ReminderContract.ReminderEntry.TABLE_NAME,null, null, null, null, null, null)
         return mapToReminders(cursor)
     }
@@ -117,7 +117,7 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         return mapNetwork(cursor)
     }
 
-    private fun mapToReminders(cursor: Cursor): List<Reminder> {
+    private fun mapToReminders(cursor: Cursor): Array<Reminder> {
         val reminders = mutableListOf<Reminder>()
         with(cursor) {
             while (moveToNext()) {
@@ -130,7 +130,7 @@ class ReminderDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
                 reminders.add(reminder)
             }
         }
-        return reminders
+        return reminders.toTypedArray()
     }
 
     private fun mapLocation(cursor: Cursor): Location? {

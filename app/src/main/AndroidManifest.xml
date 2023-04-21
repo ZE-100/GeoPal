@@ -32,12 +32,14 @@
             </intent-filter>
         </activity>
 
-        <service
-                android:name=".service.geo.GeoFenceService"
-                android:enabled="true"
-                android:exported="true"
-                android:permission="android.permission.BIND_JOB_SERVICE">
-        </service>
+<!--        <service-->
+<!--                android:name=".service.geo.GeoFenceService"-->
+<!--                android:enabled="true"-->
+<!--                android:exported="true"-->
+<!--                android:permission="android.permission.BIND_JOB_SERVICE">-->
+<!--        </service>-->
+
+        <receiver android:name=".service.geo.GeofenceBroadcastReceiver" />
     </application>
 
 </manifest>

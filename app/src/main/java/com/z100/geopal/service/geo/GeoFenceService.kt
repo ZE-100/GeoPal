@@ -69,7 +69,6 @@ class GeoFenceService : JobService() {
     }
 
     private fun createGeofences(reminder: Reminder) {
-        reminder.uuid = UUID.randomUUID().toString()
         val geofence = Geofence.Builder().apply {
             setRequestId(reminder.uuid)
             setCircularRegion(

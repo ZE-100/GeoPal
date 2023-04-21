@@ -1,5 +1,8 @@
 package com.z100.geopal
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -23,13 +26,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.Geofence.*
+import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.LocationServices
 import com.z100.geopal.database.helper.ReminderDBHelper
 import com.z100.geopal.databinding.ActivityMainBinding
+import com.z100.geopal.pojo.Reminder
 import com.z100.geopal.service.data.SPDataService
 import com.z100.geopal.service.geo.GeoFenceService
+import com.z100.geopal.service.geo.GeofenceBroadcastReceiver
 import com.z100.geopal.ui.fragments.DashboardFragment
 import com.z100.geopal.ui.fragments.SettingsFragment
 import com.z100.geopal.util.Globals.Factory.APP_PERMISSIONS_NEEDED
+import com.z100.geopal.util.Logger.Factory.log
+import com.z100.geopal.util.Logger.LogMode.ERROR
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +49,26 @@ class MainActivity : AppCompatActivity() {
         lateinit var spDataService: SPDataService
         lateinit var requestQueue: RequestQueue
         lateinit var dbHelper: ReminderDBHelper
+
+        private const val NOTIFICATION_RESPONSIVENESS = 1000
+        private val geofenceList: MutableList<Geofence> by lazy {
+            dbHelper.findAllReminders().map { createGeofence(it) }.toMutableList()
+        }
+
+        private fun createGeofence(reminder: Reminder): Geofence {
+            return Builder().apply {
+                setRequestId(reminder.uuid)
+                setCircularRegion(
+                    reminder.location!!.lat,
+                    reminder.location.lon,
+                    100f
+                )
+                setExpirationDuration(NEVER_EXPIRE)
+                setLoiteringDelay(GEOFENCE_TRANSITION_DWELL)
+                setTransitionTypes(GEOFENCE_TRANSITION_ENTER)
+                setNotificationResponsiveness(NOTIFICATION_RESPONSIVENESS)
+            }.build()
+        }
 
         fun rescheduleJob(context: Context, packageName: String) {
             val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
@@ -48,12 +80,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    var btnPressed = false
+    private lateinit var geofencingClient: GeofencingClient
+
+    private val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
+        PendingIntent.getBroadcast(this, 0, intent, FLAG_UPDATE_CURRENT)
+    }
+
+    private var btnPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        checkPermissionsAndSetup()
+        checkPermissions()
+        setupGeofencing()
+        setupMainActivity()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -65,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 420) {
             if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
-                checkPermissionsAndSetup()
+                checkPermissions()
             } else if (isLocationPermissionPermanentlyDenied()) {
                 onPermissionReallyDeniedAlert()
             } else {
@@ -81,7 +122,49 @@ class MainActivity : AppCompatActivity() {
 
         if (btnPressed && uri != null && uri.toString().startsWith("package:")) {
             btnPressed = false
-            checkPermissionsAndSetup()
+            checkPermissions()
+        }
+    }
+
+    private fun setupGeofencing() {
+        geofencingClient = LocationServices.getGeofencingClient(this)
+    }
+
+    private fun getGeofencingRequest(): GeofencingRequest {
+        return GeofencingRequest.Builder().apply {
+            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            addGeofences(geofenceList)
+        }.build()
+    }
+
+    fun addReminderToGeofence(reminder: Reminder) {
+        if (reminder.location == null) {
+            log(this::class.java, "Reminder:({}) does not have a valid location", reminder.uuid)
+            return
+        }
+        geofenceList.add(createGeofence(reminder))
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun addGeofence() {
+        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
+            addOnSuccessListener {
+                log(this.javaClass, "Geofence added successfully")
+            }
+            addOnFailureListener {
+                log(ERROR, this.javaClass, "Failed to add geofence: {}", it.message ?: "")
+            }
+        }
+    }
+
+    private fun removeGeofence() {
+        geofencingClient.removeGeofences(geofencePendingIntent).run {
+            addOnSuccessListener {
+                log(this.javaClass, "Geofence removed successfully")
+            }
+            addOnFailureListener {
+                log(ERROR, this.javaClass, "Failed to remove geofence: {}", it.message ?: "")
+            }
         }
     }
 
@@ -96,10 +179,9 @@ class MainActivity : AppCompatActivity() {
         return permanentlyDenied
     }
 
-    private fun checkPermissionsAndSetup() {
+    private fun checkPermissions() {
         if (appHasPermissions()) {
             installSplashScreen()
-            setupMainActivity()
         } else {
             ActivityCompat.requestPermissions(this, APP_PERMISSIONS_NEEDED, 420)
         }
@@ -119,7 +201,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.permission_denied_title)
             .setMessage(R.string.permission_denied_message)
             .setPositiveButton("Allow") { _, _ ->
-                checkPermissionsAndSetup()
+                checkPermissions()
             }
             .setCancelable(false)
             .create().show()
@@ -154,12 +236,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         setupMenuButtons()
-    }
-
-    private fun scheduleJob() {
-        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        val jobInfo: JobInfo = JobInfo.Builder(11, ComponentName(packageName, GeoFenceService::class.java.name)).build()
-        jobScheduler.schedule(jobInfo)
     }
 
     private fun setupMenuButtons() {

@@ -20,6 +20,8 @@ class Globals {
         /* Notification-properties*/
         const val NOTIFICATION_CHANNEL_ID = "default-channel"
         const val NOTIFICATION_CHANNEL_NAME = "Default Channel"
+        const val BACKGROUND_CHANNEL_ID = "background-channel"
+        const val BACKGROUND_CHANNEL_NAME = "Background Channel"
 
         /* Geo-properties */
         const val GEOFENCE_RADIUS_IN_METERS = 100.0f
